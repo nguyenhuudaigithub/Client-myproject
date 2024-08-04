@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import NotFound from "components/share/not.found";
-import Loading from "components/share/loading";
 import LoginPage from "pages/auth/login";
 import RegisterPage from "pages/auth/register";
 import LayoutAdmin from "components/admin/layout.admin";
@@ -17,19 +16,11 @@ import Footer from "components/client/footer.client";
 import HomePage from "pages/home";
 import styles from "styles/app.module.scss";
 import DashboardPage from "./pages/admin/dashboard";
-import CompanyPage from "./pages/admin/company";
 import PermissionPage from "./pages/admin/permission";
-import ResumePage from "./pages/admin/resume";
 import RolePage from "./pages/admin/role";
 import UserPage from "./pages/admin/user";
 import { fetchAccount } from "./redux/slice/accountSlide";
 import LayoutApp from "./components/share/layout.app";
-import JobPage from "./pages/admin/job";
-import ViewUpsertJob from "./components/admin/job/upsert.job";
-import ClientJobPage from "./pages/job";
-import ClientJobDetailPage from "./pages/job/detail";
-import ClientCompanyPage from "./pages/company";
-import ClientCompanyDetailPage from "./pages/company/detail";
 import "./styles/globals.css";
 
 const LayoutClient = () => {
@@ -78,10 +69,7 @@ export default function App() {
       errorElement: <NotFound />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: "job", element: <ClientJobPage /> },
-        { path: "job/:id", element: <ClientJobDetailPage /> },
-        { path: "company", element: <ClientCompanyPage /> },
-        { path: "company/:id", element: <ClientCompanyDetailPage /> },
+        // { path: "job", element: <ClientJobPage /> },
       ],
     },
 
@@ -102,51 +90,12 @@ export default function App() {
             </ProtectedRoute>
           ),
         },
-        {
-          path: "company",
-          element: (
-            <ProtectedRoute>
-              <CompanyPage />
-            </ProtectedRoute>
-          ),
-        },
+
         {
           path: "user",
           element: (
             <ProtectedRoute>
               <UserPage />
-            </ProtectedRoute>
-          ),
-        },
-
-        {
-          path: "job",
-          children: [
-            {
-              index: true,
-              element: (
-                <ProtectedRoute>
-                  {" "}
-                  <JobPage />
-                </ProtectedRoute>
-              ),
-            },
-            {
-              path: "upsert",
-              element: (
-                <ProtectedRoute>
-                  <ViewUpsertJob />
-                </ProtectedRoute>
-              ),
-            },
-          ],
-        },
-
-        {
-          path: "resume",
-          element: (
-            <ProtectedRoute>
-              <ResumePage />
             </ProtectedRoute>
           ),
         },

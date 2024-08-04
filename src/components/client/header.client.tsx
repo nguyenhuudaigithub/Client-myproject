@@ -1,14 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  CodeOutlined,
-  ContactsOutlined,
-  DashOutlined,
-  LogoutOutlined,
-  RiseOutlined,
-  TwitterOutlined,
-} from "@ant-design/icons";
 import { Avatar, Drawer, Dropdown, Menu, Space, message } from "antd";
 import styles from "@/styles/client.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -55,24 +47,6 @@ const Header: React.FC<HeaderProps> = () => {
     setCurrent(location.pathname);
   }, [location]);
 
-  const items = [
-    {
-      label: <NavLink href="/" title="Trang Chủ" />,
-      key: "/",
-      icon: <TwitterOutlined />,
-    },
-    {
-      label: <NavLink href="/job" title="Việc Làm IT" />,
-      key: "/job",
-      icon: <CodeOutlined />,
-    },
-    {
-      label: <NavLink href="/company" title="Top Công ty IT" />,
-      key: "/company",
-      icon: <RiseOutlined />,
-    },
-  ];
-
   const onClick = (e: { key: string }) => {
     setCurrent(e.key);
   };
@@ -97,12 +71,10 @@ const Header: React.FC<HeaderProps> = () => {
         </label>
       ),
       key: "manage-account",
-      icon: <ContactsOutlined />,
     },
     {
       label: <NavLink href="/admin" title="Trang Quản Trị" />,
       key: "admin",
-      icon: <DashOutlined />,
     },
     {
       label: (
@@ -111,11 +83,10 @@ const Header: React.FC<HeaderProps> = () => {
         </label>
       ),
       key: "logout",
-      icon: <LogoutOutlined />,
     },
   ];
 
-  const itemsMobiles = [...items, ...itemsDropdown];
+  const itemsMobiles = [...itemsDropdown];
 
   return (
     <>
