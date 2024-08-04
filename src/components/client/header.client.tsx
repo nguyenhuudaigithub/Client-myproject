@@ -1,164 +1,190 @@
-import { useState, useEffect } from 'react';
-import { CodeOutlined, ContactsOutlined, DashOutlined, LogoutOutlined, MenuFoldOutlined, RiseOutlined, TwitterOutlined } from '@ant-design/icons';
-import { Avatar, Drawer, Dropdown, MenuProps, Space, message } from 'antd';
-import { Menu, ConfigProvider } from 'antd';
-import styles from '@/styles/client.module.scss';
-import { isMobile } from 'react-device-detect';
-import { FaReact } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { callLogout } from '@/config/api';
-import { setLogoutAction } from '@/redux/slice/accountSlide';
-import ManageAccount from './modal/manage.account';
+"use client";
 
-const Header = (props: any) => {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+import { useState, useEffect } from "react";
+import {
+  CodeOutlined,
+  ContactsOutlined,
+  DashOutlined,
+  LogoutOutlined,
+  RiseOutlined,
+  TwitterOutlined,
+} from "@ant-design/icons";
+import { Avatar, Drawer, Dropdown, Menu, Space, message } from "antd";
+import styles from "@/styles/client.module.scss";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { callLogout } from "@/config/api";
+import { setLogoutAction } from "@/redux/slice/accountSlide";
+import ManageAccount from "./modal/manage.account";
+import NavLink from "./NavLink";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import MenuOverlay from "./MenuOverlay";
 
-    const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
-    const user = useAppSelector(state => state.account.user);
-    const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false);
+// Định nghĩa kiểu cho props của component Header
+interface NavLinkType {
+  title: string;
+  path: string;
+}
 
-    const [current, setCurrent] = useState('home');
-    const location = useLocation();
+interface HeaderProps {}
 
-    const [openMangeAccount, setOpenManageAccount] = useState<boolean>(false);
+const nav = {
+  logo: "DAINGUYEN",
+  navlink: [
+    { title: "About", path: "#about" },
+    { title: "Projects", path: "#projects" },
+    { title: "Contact", path: "#contact" },
+  ] as NavLinkType[],
+};
 
-    useEffect(() => {
-        setCurrent(location.pathname);
-    }, [location])
+const Header: React.FC<HeaderProps> = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-    const items: MenuProps['items'] = [
-        {
-            label: <Link to={'/'}>Trang Chủ</Link>,
-            key: '/',
-            icon: <TwitterOutlined />,
-        },
-        {
-            label: <Link to={'/job'}>Việc Làm IT</Link>,
-            key: '/job',
-            icon: <CodeOutlined />,
-        },
-        {
-            label: <Link to={'/company'}>Top Công ty IT</Link>,
-            key: '/company',
-            icon: <RiseOutlined />,
-        }
-    ];
+  const isAuthenticated = useAppSelector(
+    (state) => state.account.isAuthenticated
+  );
+  const user = useAppSelector((state) => state.account.user);
+  const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false);
+  const [current, setCurrent] = useState<string>("home");
+  const location = useLocation();
+  const [openMangeAccount, setOpenManageAccount] = useState<boolean>(false);
+  const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    setCurrent(location.pathname);
+  }, [location]);
 
+  const items = [
+    {
+      label: <NavLink href="/" title="Trang Chủ" />,
+      key: "/",
+      icon: <TwitterOutlined />,
+    },
+    {
+      label: <NavLink href="/job" title="Việc Làm IT" />,
+      key: "/job",
+      icon: <CodeOutlined />,
+    },
+    {
+      label: <NavLink href="/company" title="Top Công ty IT" />,
+      key: "/company",
+      icon: <RiseOutlined />,
+    },
+  ];
 
-    const onClick: MenuProps['onClick'] = (e) => {
-        setCurrent(e.key);
-    };
+  const onClick = (e: { key: string }) => {
+    setCurrent(e.key);
+  };
 
-    const handleLogout = async () => {
-        const res = await callLogout();
-        if (res && res.data) {
-            dispatch(setLogoutAction({}));
-            message.success('Đăng xuất thành công');
-            navigate('/')
-        }
+  const handleLogout = async () => {
+    const res = await callLogout();
+    if (res && res.data) {
+      dispatch(setLogoutAction({}));
+      message.success("Đăng xuất thành công");
+      navigate("/");
     }
+  };
 
-    const itemsDropdown = [
-        {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => setOpenManageAccount(true)}
-            >Quản lý tài khoản</label>,
-            key: 'manage-account',
-            icon: <ContactsOutlined />
-        },
-        {
-            label: <Link
-                to={"/admin"}
-            >Trang Quản Trị</Link>,
-            key: 'admin',
-            icon: <DashOutlined />
-        },
-        {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleLogout()}
-            >Đăng xuất</label>,
-            key: 'logout',
-            icon: <LogoutOutlined />
-        },
-    ];
+  const itemsDropdown = [
+    {
+      label: (
+        <label
+          style={{ cursor: "pointer" }}
+          onClick={() => setOpenManageAccount(true)}
+        >
+          Quản lý tài khoản
+        </label>
+      ),
+      key: "manage-account",
+      icon: <ContactsOutlined />,
+    },
+    {
+      label: <NavLink href="/admin" title="Trang Quản Trị" />,
+      key: "admin",
+      icon: <DashOutlined />,
+    },
+    {
+      label: (
+        <label style={{ cursor: "pointer" }} onClick={handleLogout}>
+          Đăng xuất
+        </label>
+      ),
+      key: "logout",
+      icon: <LogoutOutlined />,
+    },
+  ];
 
-    const itemsMobiles = [...items, ...itemsDropdown];
+  const itemsMobiles = [...items, ...itemsDropdown];
 
-    return (
-        <>
-            <div className={styles["header-section"]}>
-                <div className={styles["container"]}>
-                    {!isMobile ?
-                        <div style={{ display: "flex", gap: 30 }}>
-                            <div className={styles['brand']} >
-                                <FaReact onClick={() => navigate('/')} title='Hỏi Dân IT' />
-                            </div>
-                            <div className={styles['top-menu']}>
-                                <ConfigProvider
-                                    theme={{
-                                        token: {
-                                            colorPrimary: '#fff',
-                                            colorBgContainer: '#222831',
-                                            colorText: '#a7a7a7',
-                                        },
-                                    }}
-                                >
+  return (
+    <>
+      <nav className="fixed mx-auto border border-[#33353F] top-0 left-0 right-0 z-10 bg-[#121212] bg-opacity-100">
+        <div className="flex container lg:py-4 flex-wrap items-center justify-between mx-auto px-4 py-2">
+          <NavLink href="/" title={nav.logo} />
+          <div className="mobile-menu block md:hidden">
+            {!navbarOpen ? (
+              <button
+                onClick={() => setNavbarOpen(true)}
+                className="flex items-center px-3 py-2 border rounded border-slate-200 text-slate-200 hover:text-white hover:border-white"
+              >
+                <Bars3Icon className="h-5 w-5" />
+              </button>
+            ) : (
+              <button
+                onClick={() => setNavbarOpen(false)}
+                className="flex items-center px-3 py-2 border rounded border-slate-200 text-slate-200 hover:text-white hover:border-white"
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+          <div className="menu hidden md:block md:w-auto" id="navbar">
+            <ul className="flex p-4 md:p-0 md:flex-row md:space-x-8 mt-0">
+              {nav.navlink.map((link, index) => (
+                <li key={index}>
+                  <NavLink href={link.path} title={link.title} />
+                </li>
+              ))}
+              <div className={styles["extra"]}>
+                {isAuthenticated === false ? (
+                  <NavLink href="/login" title="Login" />
+                ) : (
+                  <Dropdown menu={{ items: itemsDropdown }} trigger={["click"]}>
+                    <Space style={{ cursor: "pointer" }}>
+                      <span>Welcome {user?.name}</span>
+                      <Avatar>
+                        {user?.name?.substring(0, 2)?.toUpperCase()}
+                      </Avatar>
+                    </Space>
+                  </Dropdown>
+                )}
+              </div>
+            </ul>
+          </div>
+        </div>
+        {navbarOpen && <MenuOverlay links={nav.navlink} />}
+      </nav>
 
-                                    <Menu
-                                        // onClick={onClick}
-                                        selectedKeys={[current]}
-                                        mode="horizontal"
-                                        items={items}
-                                    />
-                                </ConfigProvider>
-                                <div className={styles['extra']}>
-                                    {isAuthenticated === false ?
-                                        <Link to={'/login'}>Đăng Nhập</Link>
-                                        :
-                                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                                            <Space style={{ cursor: "pointer" }}>
-                                                <span>Welcome {user?.name}</span>
-                                                <Avatar> {user?.name?.substring(0, 2)?.toUpperCase()} </Avatar>
-                                            </Space>
-                                        </Dropdown>
-                                    }
-
-                                </div>
-
-                            </div>
-                        </div>
-                        :
-                        <div className={styles['header-mobile']}>
-                            <span>Your APP</span>
-                            <MenuFoldOutlined onClick={() => setOpenMobileMenu(true)} />
-                        </div>
-                    }
-                </div>
-            </div>
-            <Drawer title="Chức năng"
-                placement="right"
-                onClose={() => setOpenMobileMenu(false)}
-                open={openMobileMenu}
-            >
-                <Menu
-                    onClick={onClick}
-                    selectedKeys={[current]}
-                    mode="vertical"
-                    items={itemsMobiles}
-                />
-            </Drawer>
-            <ManageAccount
-                open={openMangeAccount}
-                onClose={setOpenManageAccount}
-            />
-        </>
-    )
+      <Drawer
+        title="Chức năng"
+        placement="right"
+        onClose={() => setOpenMobileMenu(false)}
+        open={openMobileMenu}
+      >
+        <Menu
+          onClick={onClick}
+          selectedKeys={[current]}
+          mode="vertical"
+          items={itemsMobiles}
+        />
+      </Drawer>
+      <ManageAccount
+        open={openMangeAccount}
+        onClose={() => setOpenManageAccount(false)}
+      />
+    </>
+  );
 };
 
 export default Header;
