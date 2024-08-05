@@ -1,28 +1,9 @@
 import {
-  Button,
-  Col,
-  Form,
   Modal,
-  Row,
-  Select,
-  Table,
   Tabs,
-  message,
-  notification,
 } from "antd";
 import { isMobile } from "react-device-detect";
 import type { TabsProps } from "antd";
-import { IResume } from "@/types/backend";
-import { useState, useEffect } from "react";
-import {
-  callFetchResumeByUser,
-  callGetSubscriberSkills,
-  callUpdateSubscriber,
-} from "@/config/api";
-import type { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
-import { SKILLS_LIST } from "@/config/utils";
-import { useAppSelector } from "@/redux/hooks";
 
 interface IProps {
   open: boolean;

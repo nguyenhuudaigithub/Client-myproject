@@ -8,28 +8,13 @@ interface Achievement {
   postfix?: string;
 }
 
-const achievementsList: Achievement[] = [
-  {
-    metric: "Projects",
-    value: "100",
-    postfix: "+",
-  },
-  {
-    prefix: "~",
-    metric: "Users",
-    value: "100,000",
-  },
-  {
-    metric: "Awards",
-    value: "7",
-  },
-  {
-    metric: "Years",
-    value: "5",
-  },
-];
+interface AchievementsList {
+  achievementsList: Achievement[];
+}
 
-const AchievementsSection: React.FC = () => {
+const AchievementsSection: React.FC<AchievementsList> = ({
+  achievementsList,
+}) => {
   return (
     <div className="py-8 px-4 xl:gap-16 sm:py-16 xl:px-16">
       <div className="sm:border-[#33353F] sm:border rounded-md py-8 px-16 flex flex-col sm:flex-row items-center justify-between">

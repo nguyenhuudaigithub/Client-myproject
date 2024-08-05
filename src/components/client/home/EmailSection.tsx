@@ -14,34 +14,21 @@ interface ContactInfo {
   socialMedia: SocialMedia[];
 }
 
-const contact: ContactInfo = {
-  title: "Let's Connect",
-  detail:
-    "I'm currently looking for new opportunities, my inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!",
-  socialMedia: [
-    {
-      name: "GitHub",
-      image:
-        "https://img.icons8.com/?size=100&id=OKQ59BZ2FQUg&format=png&color=000000",
-      link: "https://img.icons8.com/?size=100&id=12599&format=png&color=000000",
-    },
-    {
-      name: "LinkedIn",
-      image:
-        "https://img.icons8.com/?size=100&id=OKQ59BZ2FQUg&format=png&color=000000",
-      link: "https://img.icons8.com/?size=100&id=13930&format=png&color=000000",
-    },
-    // Add more social media platforms here
-  ],
-};
+const EmailSection: React.FC<ContactInfo> = ({
+  title,
+  detail,
+  socialMedia,
+}) => {
+  console.log(title);
+  console.log(detail);
+  console.log(socialMedia);
 
-const EmailSection: React.FC = () => {
   return (
     <section className="text-white py-8 px-4 xl:px-16">
-      <h2 className="text-4xl font-bold mb-4">{contact.title}</h2>
-      <p className="text-base lg:text-lg mb-8">{contact.detail}</p>
+      <h2 className="text-4xl font-bold mb-4">{title}</h2>
+      <p className="text-base lg:text-lg mb-8">{detail}</p>
       <div className="flex gap-4">
-        {contact.socialMedia.map((media) => (
+        {socialMedia.map((media) => (
           <a
             key={media.name}
             href={media.link}

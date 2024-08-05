@@ -11,25 +11,17 @@ import ManageAccount from "./modal/manage.account";
 import NavLink from "./NavLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import MenuOverlay from "./MenuOverlay";
-
-// Định nghĩa kiểu cho props của component Header
 interface NavLinkType {
   title: string;
   path: string;
 }
 
-interface HeaderProps {}
+interface HeroSectionProps {
+  logo: string;
+  nav: NavLinkType[];
+}
 
-const nav = {
-  logo: "DAINGUYEN",
-  navlink: [
-    { title: "About", path: "#about" },
-    { title: "Projects", path: "#projects" },
-    { title: "Contact", path: "#contact" },
-  ] as NavLinkType[],
-};
-
-const Header: React.FC<HeaderProps> = () => {
+const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -92,7 +84,7 @@ const Header: React.FC<HeaderProps> = () => {
     <>
       <nav className="fixed mx-auto border border-[#33353F] top-0 left-0 right-0 z-10 bg-[#121212] bg-opacity-100">
         <div className="flex container lg:py-4 flex-wrap items-center justify-between mx-auto px-4 py-2">
-          <NavLink href="/" title={nav.logo} />
+          <NavLink href="/" title={logo} />
           <div className="mobile-menu block md:hidden">
             {!navbarOpen ? (
               <button
@@ -112,7 +104,7 @@ const Header: React.FC<HeaderProps> = () => {
           </div>
           <div className="menu hidden md:block md:w-auto" id="navbar">
             <ul className="flex p-4 md:p-0 md:flex-row md:space-x-8 mt-0">
-              {nav.navlink.map((link, index) => (
+              {nav.map((link, index) => (
                 <li key={index}>
                   <NavLink href={link.path} title={link.title} />
                 </li>
@@ -134,7 +126,7 @@ const Header: React.FC<HeaderProps> = () => {
             </ul>
           </div>
         </div>
-        {navbarOpen && <MenuOverlay links={nav.navlink} />}
+        {navbarOpen && <MenuOverlay links={nav} />}
       </nav>
 
       <Drawer

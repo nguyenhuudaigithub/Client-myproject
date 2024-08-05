@@ -1,28 +1,19 @@
-import {
-  Action,
-  configureStore,
-  ThunkAction,
-} from '@reduxjs/toolkit';
-import accountReducer from './slice/accountSlide';
-import companyReducer from './slice/companySlide';
-import userReducer from './slice/userSlide';
-import jobReducer from './slice/jobSlide';
-import resumeReducer from './slice/resumeSlide';
-import permissionReducer from './slice/permissionSlide';
-import roleReducer from './slice/roleSlide';
+import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import accountReducer from "./slice/accountSlide";
+import userReducer from "./slice/userSlide";
+import permissionReducer from "./slice/permissionSlide";
+import roleReducer from "./slice/roleSlide";
+import profileReducer from "./slice/profileSlide";
 
 export const store = configureStore({
   reducer: {
     account: accountReducer,
-    company: companyReducer,
     user: userReducer,
-    job: jobReducer,
-    resume: resumeReducer,
+    profile: profileReducer,
     permission: permissionReducer,
-    role: roleReducer
+    role: roleReducer,
   },
 });
-
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
