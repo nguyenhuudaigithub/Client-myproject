@@ -21,7 +21,11 @@ interface ProjectsData {
   data: Project[];
 }
 
-const ProjectsSection: React.FC<ProjectsData> = ({ title, data }) => {
+interface Data {
+  projectsData: ProjectsData;
+}
+
+const ProjectsSection: React.FC<Data> = ({ projectsData }) => {
   const [tag, setTag] = useState<string>("All");
   const ref = useRef<HTMLUListElement | null>(null);
   const isInView = useInView(ref, { once: true });
@@ -30,7 +34,9 @@ const ProjectsSection: React.FC<ProjectsData> = ({ title, data }) => {
     setTag(newTag);
   };
 
-  const filteredProjects = data.filter((project) => project.tag.includes(tag));
+  const filteredProjects = projectsData.data.filter((project) =>
+    project.tag.includes(tag)
+  );
 
   const cardVariants = {
     initial: { y: 50, opacity: 0 },
@@ -40,14 +46,16 @@ const ProjectsSection: React.FC<ProjectsData> = ({ title, data }) => {
   const allTags = [
     "All",
     ...new Set(
-      data.flatMap((project) => project.tag).filter((tag) => tag !== "All")
+      projectsData.data
+        .flatMap((project) => project.tag)
+        .filter((tag) => tag !== "All")
     ),
   ];
 
   return (
     <section id="projects">
       <h2 className="text-center text-4xl font-bold text-white mt-4 mb-8 md:mb-12">
-        {title}
+        {projectsData.title}
       </h2>
       <div className="text-white flex flex-row justify-center items-center gap-2 py-6">
         {allTags.map((tagName) => (

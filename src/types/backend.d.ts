@@ -70,7 +70,7 @@ export interface IAccount {
       _id: string;
       name: string;
     };
-    permissions: {
+    permission: {
       _id: string;
       name: string;
       apiPath: string;
@@ -165,8 +165,8 @@ export interface IProfile {
   achievementsList: IAchievement[];
   about: IAbout;
   tabData: ITabData[];
-  projectsData: IProjectsData[];
-  contact: IContact[];
+  projectsData: IProjectsData;
+  contact: IContact;
   createBy: IUser;
   isDeleted: boolean;
   deletedAt: string | null;

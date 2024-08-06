@@ -4,14 +4,9 @@ import {
   ExceptionOutlined,
   ApiOutlined,
   UserOutlined,
-  BankOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  AliwangwangOutlined,
-  LogoutOutlined,
-  HeartTwoTone,
   BugOutlined,
-  ScheduleOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -23,18 +18,15 @@ import type { MenuProps } from "antd";
 import { setLogoutAction } from "@/redux/slice/accountSlide";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const LayoutAdmin = () => {
   const location = useLocation();
-
   const [collapsed, setCollapsed] = useState(false);
   const [activeMenu, setActiveMenu] = useState("");
   const user = useAppSelector((state) => state.account.user);
-
-  const permissions = useAppSelector((state) => state.account.user.permissions);
+  const permissions = useAppSelector((state) => state.account.user.permission);
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -44,18 +36,6 @@ const LayoutAdmin = () => {
         (item) =>
           item.apiPath === ALL_PERMISSIONS.USERS.GET_PAGINATE.apiPath &&
           item.method === ALL_PERMISSIONS.USERS.GET_PAGINATE.method
-      );
-
-      const viewJob = permissions.find(
-        (item) =>
-          item.apiPath === ALL_PERMISSIONS.JOBS.GET_PAGINATE.apiPath &&
-          item.method === ALL_PERMISSIONS.JOBS.GET_PAGINATE.method
-      );
-
-      const viewResume = permissions.find(
-        (item) =>
-          item.apiPath === ALL_PERMISSIONS.RESUMES.GET_PAGINATE.apiPath &&
-          item.method === ALL_PERMISSIONS.RESUMES.GET_PAGINATE.method
       );
 
       const viewRole = permissions.find(
@@ -86,25 +66,7 @@ const LayoutAdmin = () => {
               },
             ]
           : []),
-        ...(viewJob
-          ? [
-              {
-                label: <Link to="/admin/job">Job</Link>,
-                key: "/admin/job",
-                icon: <ScheduleOutlined />,
-              },
-            ]
-          : []),
 
-        ...(viewResume
-          ? [
-              {
-                label: <Link to="/admin/resume">Resume</Link>,
-                key: "/admin/resume",
-                icon: <AliwangwangOutlined />,
-              },
-            ]
-          : []),
         ...(viewPermission
           ? [
               {
@@ -126,8 +88,10 @@ const LayoutAdmin = () => {
       ];
 
       setMenuItems(full);
+      console.log("Menu items set:", full);
     }
-  }, [permissions]);
+  }, [permissions, setMenuItems]);
+
   useEffect(() => {
     setActiveMenu(location.pathname);
   }, [location]);
@@ -140,17 +104,6 @@ const LayoutAdmin = () => {
       navigate("/");
     }
   };
-
-  // if (isMobile) {
-  //     items.push({
-  //         label: <label
-  //             style={{ cursor: 'pointer' }}
-  //             onClick={() => handleLogout()}
-  //         >Đăng xuất</label>,
-  //         key: 'logout',
-  //         icon: <LogoutOutlined />
-  //     })
-  // }
 
   const itemsDropdown = [
     {
@@ -177,7 +130,14 @@ const LayoutAdmin = () => {
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
           >
-            <div style={{ height: 32, margin: 16, textAlign: "center" }}>
+            <div
+              style={{
+                height: 32,
+                margin: 16,
+                textAlign: "center",
+                color: "black",
+              }}
+            >
               <BugOutlined /> ADMIN
             </div>
             <Menu
@@ -223,11 +183,7 @@ const LayoutAdmin = () => {
 
               <Dropdown menu={{ items: itemsDropdown }} trigger={["click"]}>
                 <Space style={{ cursor: "pointer" }}>
-                  Welcome {user?.name}
-                  <Avatar>
-                    {" "}
-                    {user?.name?.substring(0, 2)?.toUpperCase()}{" "}
-                  </Avatar>
+                  <Avatar>{user?.name?.substring(0, 2)?.toUpperCase()}</Avatar>
                 </Space>
               </Dropdown>
             </div>
@@ -235,9 +191,6 @@ const LayoutAdmin = () => {
           <Content style={{ padding: "15px" }}>
             <Outlet />
           </Content>
-          {/* <Footer style={{ padding: 10, textAlign: 'center' }}>
-                        React Typescript series Nest.JS &copy; Hỏi Dân IT - Made with <HeartTwoTone />
-                    </Footer> */}
         </Layout>
       </Layout>
     </>

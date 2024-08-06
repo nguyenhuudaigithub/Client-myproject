@@ -20,8 +20,6 @@ interface TAB_DATA {
 }
 
 const AboutSection: React.FC<TAB_DATA> = ({ about, tab_Data }) => {
-  const data = about[0];
-
   const [tab, setTab] = useState<string>("skills");
   const [isPending, startTransition] = useTransition();
 
@@ -34,10 +32,10 @@ const AboutSection: React.FC<TAB_DATA> = ({ about, tab_Data }) => {
   return (
     <section className="text-white" id="about">
       <div className="md:grid md:grid-cols-2 gap-8 items-center py-8 px-4 xl:gap-16 sm:py-16 xl:px-16">
-        <img src={data.imageAbout} alt="About" width={500} height={500} />
+        <img src={about.imageAbout} alt="About" width={500} height={500} />
         <div className="mt-4 md:mt-0 text-left flex flex-col h-full">
-          <h2 className="text-4xl font-bold text-white mb-4">{data.title}</h2>
-          <p className="text-base lg:text-lg">{data.detail}</p>
+          <h2 className="text-4xl font-bold text-white mb-4">{about.title}</h2>
+          <p className="text-base lg:text-lg">{about.detail}</p>
           <div className="flex flex-row justify-start mt-8">
             {tab_Data.map((tabData) => (
               <TabButton

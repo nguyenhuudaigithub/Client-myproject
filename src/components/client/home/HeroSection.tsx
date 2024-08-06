@@ -15,14 +15,12 @@ interface HeroSectionData {
   infor: Info[];
 }
 
-interface HeroSectionProps {
-  heroSection: HeroSectionData;
+interface HeroData {
+  heroData: HeroSectionData;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ heroSection }) => {
-  const data = heroSection[0];
-
-  const animationSequence = data.infor.flatMap((item) => [
+const HeroSection: React.FC<HeroData> = ({ heroData }) => {
+  const animationSequence = heroData.infor.flatMap((item) => [
     item.title,
     item.time,
   ]);
@@ -49,7 +47,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ heroSection }) => {
             />
           </h1>
           <p className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">
-            {data.text}
+            {heroData.text}
           </p>
           <div>
             <Link
@@ -76,7 +74,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ heroSection }) => {
         >
           <div className="rounded-full bg-[#181818] w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] relative">
             <img
-              src={data.image}
+              src={heroData.image}
               alt="hero image"
               className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-full"
               width={400}

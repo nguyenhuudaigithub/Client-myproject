@@ -16,22 +16,15 @@ const HomePage: React.FC<DataProfile> = ({ data }) => {
   return (
     <div className={`${styles["container"]} ${styles["home-section"]}`}>
       <Divider />
-      <HeroSection heroSection={data.heroSection} />
+      <HeroSection heroData={data.heroSection} />
       <Divider />
       <AchievementsSection achievementsList={data.achievementsList} />
       <Divider />
-      <AboutSection tab_Data={data.tabData} about={data.about} />
+      <AboutSection about={data.about} tab_Data={data.tabData} />
       <Divider />
-      <ProjectsSection
-        title={data.projectsData[0].title}
-        data={data.projectsData[0].data}
-      />
+      <ProjectsSection projectsData={data.projectsData} />
       <Divider />
-      <EmailSection
-        title={data.contact[0].title}
-        detail={data.contact[0].detail}
-        socialMedia={data.contact[0].socialMedia}
-      />
+      <EmailSection contact={data.contact} />
     </div>
   );
 };

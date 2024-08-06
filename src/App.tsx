@@ -45,7 +45,7 @@ const LayoutClient: React.FC<{ profileData: IProfile }> = ({ profileData }) => {
       <div className={styles["content-app"]}>
         <Outlet context={[searchTerm, setSearchTerm]} />
       </div>
-      <Footer />
+      <Footer logo={profileData.logo} text={profileData.description} />
     </div>
   );
 };
