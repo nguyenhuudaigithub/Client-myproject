@@ -27,6 +27,7 @@ import Loading from "components/share/loading";
 import ProtectedRoute from "./components/share/protected-route.ts";
 import { IProfile } from "./types/backend.js";
 import { fetchAccount } from "./redux/slice/accountSlide.js";
+import ProfilePage from "./pages/admin/profile.js";
 
 const LayoutClient: React.FC<{ profileData: IProfile }> = ({ profileData }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -140,6 +141,14 @@ export default function App() {
           element: (
             <ProtectedRoute>
               <RolePage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           ),
         },

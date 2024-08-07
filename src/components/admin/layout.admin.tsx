@@ -50,6 +50,12 @@ const LayoutAdmin = () => {
           item.method === ALL_PERMISSIONS.USERS.GET_PAGINATE.method
       );
 
+      const viewProfile = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.PROFILES.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.PROFILES.GET_PAGINATE.method
+      );
+
       const full = [
         {
           label: <Link to="/admin">Dashboard</Link>,
@@ -85,10 +91,19 @@ const LayoutAdmin = () => {
               },
             ]
           : []),
+        ...(viewProfile
+          ? [
+              {
+                label: <Link to="/admin/profile">Profile</Link>,
+                key: "/admin/profile",
+                icon: <ExceptionOutlined />,
+              },
+            ]
+          : []),
       ];
 
       setMenuItems(full);
-      console.log("Menu items set:", full);
+      // console.log("Menu items set:", full);
     }
   }, [permissions, setMenuItems]);
 
@@ -188,7 +203,12 @@ const LayoutAdmin = () => {
               </Dropdown>
             </div>
           )}
-          <Content style={{ padding: "15px" }}>
+          <Content
+            style={{
+              padding: "15px",
+              backgroundColor: "#ededed",
+            }}
+          >
             <Outlet />
           </Content>
         </Layout>

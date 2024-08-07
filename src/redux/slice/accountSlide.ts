@@ -6,7 +6,7 @@ export const fetchAccount = createAsyncThunk(
   "account/fetchAccount",
   async () => {
     const response = await callFetchAccount();
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   }
 );
@@ -101,7 +101,7 @@ export const accountSlide = createSlice({
     });
 
     builder.addCase(fetchAccount.fulfilled, (state, action) => {
-      console.log("Fetch Account Fulfilled:", action.payload);
+      // console.log("Fetch Account Fulfilled:", action.payload);
       if (action.payload) {
         state.isAuthenticated = true;
         state.isLoading = false;

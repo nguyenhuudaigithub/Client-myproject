@@ -64,10 +64,7 @@ const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
       ),
       key: "manage-account",
     },
-    {
-      label: <NavLink href="/admin" title="Trang Quản Trị" />,
-      key: "admin",
-    },
+
     {
       label: (
         <label style={{ cursor: "pointer" }} onClick={handleLogout}>
@@ -75,6 +72,10 @@ const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
         </label>
       ),
       key: "logout",
+    },
+    {
+      label: <NavLink href="/admin" title="Trang Quản Trị" />,
+      key: "admin",
     },
   ];
 
@@ -115,8 +116,7 @@ const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
                 ) : (
                   <Dropdown menu={{ items: itemsDropdown }} trigger={["click"]}>
                     <Space style={{ cursor: "pointer" }}>
-                      <span>Welcome {user?.name}</span>
-                      <Avatar>
+                      <Avatar className="bg-white text-black">
                         {user?.name?.substring(0, 2)?.toUpperCase()}
                       </Avatar>
                     </Space>

@@ -33,6 +33,24 @@ export const ALL_PERMISSIONS = {
     UPDATE: { method: "PATCH", apiPath: "/api/v1/users/:id", module: "USERS" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/users/:id", module: "USERS" },
   },
+  PROFILES: {
+    GET_PAGINATE: {
+      method: "GET",
+      apiPath: "/api/v1/profile",
+      module: "PROFILES",
+    },
+    CREATE: { method: "POST", apiPath: "/api/v1/profile", module: "PROFILES" },
+    UPDATE: {
+      method: "PATCH",
+      apiPath: "/api/v1/profile/:id",
+      module: "PROFILES",
+    },
+    DELETE: {
+      method: "DELETE",
+      apiPath: "/api/v1/profile/:id",
+      module: "PROFILES",
+    },
+  },
 };
 
 export const ALL_MODULES = {
@@ -41,4 +59,5 @@ export const ALL_MODULES = {
   PERMISSIONS: "PERMISSIONS",
   ROLES: "ROLES",
   USERS: "USERS",
+  PROFILES: "PROFILES",
 };

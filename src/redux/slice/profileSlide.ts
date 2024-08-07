@@ -36,12 +36,7 @@ export const profileSlide = createSlice({
   name: "profile",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
-  reducers: {
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    setActiveMenu: (state, action) => {
-      // state.activeMenu = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchProfile.pending, (state, action) => {
@@ -69,6 +64,6 @@ export const profileSlide = createSlice({
   },
 });
 
-export const { setActiveMenu } = profileSlide.actions;
+export const {} = profileSlide.actions;
 
 export default profileSlide.reducer;

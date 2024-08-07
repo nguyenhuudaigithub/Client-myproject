@@ -85,24 +85,17 @@ export interface IGetAccount extends Omit<IAccount, "access_token"> {}
 export interface INavLink {
   title: string;
   path: string;
-  _id: string;
-  isDeleted: boolean;
-  deletedAt: string | null;
 }
 
 export interface IHeroInfo {
   title: string;
   time: string;
-  _id: string;
-  isDeleted: boolean;
-  deletedAt: string | null;
 }
 
 export interface IHeroSection {
   image: string;
   text: string;
-  infor: IHeroInfo[];
-  _id: string;
+  infor: IHeroInfo[] | string[];
 }
 
 export interface IAchievement {
@@ -110,7 +103,6 @@ export interface IAchievement {
   metric: string;
   value: string;
   postfix: string;
-  _id: string;
 }
 
 export interface IAbout {
@@ -123,7 +115,6 @@ export interface ITabData {
   title: string;
   id: string;
   content: string;
-  _id: string;
 }
 
 export interface IProject {
@@ -138,42 +129,39 @@ export interface IProject {
 
 export interface IProjectsData {
   title: string;
-  data: IProject[];
+  data: IProject[] | string[];
 }
 
 export interface ISocialMedia {
   name: string;
   image: string;
   link: string;
-  _id: string;
 }
 
 export interface IContact {
   title: string;
   detail: string;
-  socialMedia: ISocialMedia[];
-  _id: string;
+  socialMedia: ISocialMedia[] | string[];
 }
 
 export interface IProfile {
-  _id: string;
+  _id?: string;
   title: string;
   logo: string;
   description: string;
-  navLink: INavLink[];
+  navLink: INavLink[] | string[];
   heroSection: IHeroSection;
-  achievementsList: IAchievement[];
+  achievementsList: IAchievement[] | string[];
   about: IAbout;
-  tabData: ITabData[];
+  tabData: ITabData[] | string[];
   projectsData: IProjectsData;
   contact: IContact;
-  createBy: IUser;
-  isDeleted: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  createBy?: IUser;
+  isDeleted?: boolean;
+  deletedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
   isActive: boolean;
-  updateBy: IUser;
-  deletecBy: IUser;
+  updateBy?: IUser;
+  deletecBy?: IUser;
 }

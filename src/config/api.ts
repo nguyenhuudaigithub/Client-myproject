@@ -150,12 +150,38 @@ export const callFetchRoleById = (id: string) => {
  * 
 Module Profile
  */
-export const callCreateProfile = (pr: IProfile) => {
-  return axios.post<IBackendRes<IProfile>>("/api/v1/profile", { ...pr });
+// export const callCreateProfile = (pr: IProfile) => {
+//   return axios.post<IBackendRes<IProfile>>("/api/v1/profile", { ...pr });
+// };
+
+// export const callUpdateProfile = (pr: IProfile) => {
+//   return axios.patch<IBackendRes<IProfile>>(`/api/v1/profile`, { ...pr });
+// };
+
+// export const callDeleteProfile = (id: string) => {
+//   return axios.delete<IBackendRes<IProfile>>(`/api/v1/profile/${id}`);
+// };
+
+// export const callFetchProfile = (query: string) => {
+//   return axios.get<IBackendRes<IModelPaginate<IProfile>>>(
+//     `/api/v1/profile?${query}`
+//   );
+// };
+
+// export const callFetchProfileById = (id: string) => {
+//   return axios.get<IBackendRes<IProfile>>(`/api/v1/profile/${id}`);
+// };
+
+export const callCreateProfile = (profile: IProfile) => {
+  return axios.post<IBackendRes<IProfile>>("/api/v1/profile", {
+    ...profile,
+  });
 };
 
-export const callUpdateProfile = (pr: IProfile) => {
-  return axios.patch<IBackendRes<IProfile>>(`/api/v1/profile`, { ...pr });
+export const callUpdateProfile = (profile: IProfile, id: string) => {
+  return axios.patch<IBackendRes<IProfile>>(`/api/v1/profile/${id}`, {
+    ...profile,
+  });
 };
 
 export const callDeleteProfile = (id: string) => {

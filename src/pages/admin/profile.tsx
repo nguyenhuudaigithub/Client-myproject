@@ -1,36 +1,37 @@
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { fetchUser } from "@/redux/slice/userSlide";
-import { IUser } from "@/types/backend";
+import { IProfile } from "@/types/backend";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
-import { Button, Popconfirm, Space, message, notification } from "antd";
+import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef } from "react";
 import dayjs from "dayjs";
-import { callDeleteUser } from "@/config/api";
+import { callDeleteProfile } from "@/config/api";
 import queryString from "query-string";
-import ModalUser from "@/components/admin/user/modal.user";
-import ViewDetailUser from "@/components/admin/user/view.user";
+import { fetchProfile } from "@/redux/slice/profileSlide";
+import ViewDetailProfile from "@/components/admin/profile/view.profile";
+import ModalProfile from "@/components/admin/profile/modal.profile";
+import { colorMethod } from "@/config/utils";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 
-const UserPage = () => {
+const ProfilePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [dataInit, setDataInit] = useState<IUser | null>(null);
+  const [dataInit, setDataInit] = useState<IProfile | null>(null);
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
 
   const tableRef = useRef<ActionType>();
 
-  const isFetching = useAppSelector((state) => state.user.isFetching);
-  const meta = useAppSelector((state) => state.user.meta);
-  const users = useAppSelector((state) => state.user.result);
+  const isFetching = useAppSelector((state) => state.profile.isFetching);
+  const meta = useAppSelector((state) => state.profile.meta);
+  const permissions = useAppSelector((state) => state.profile.result);
   const dispatch = useAppDispatch();
 
-  const handleDeleteUser = async (_id: string | undefined) => {
+  const handleDeletePermission = async (_id: string | undefined) => {
     if (_id) {
-      const res = await callDeleteUser(_id);
+      const res = await callDeleteProfile(_id);
       if (res && res.data) {
-        message.success("Xóa User thành công");
+        message.success("Xóa Profile thành công");
         reloadTable();
       } else {
         notification.error({
@@ -45,7 +46,7 @@ const UserPage = () => {
     tableRef?.current?.reload();
   };
 
-  const columns: ProColumns<IUser>[] = [
+  const columns: ProColumns<IProfile>[] = [
     {
       title: "Id",
       dataIndex: "_id",
@@ -66,16 +67,29 @@ const UserPage = () => {
       hideInSearch: true,
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Title",
+      dataIndex: "logo",
       sorter: true,
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: "Description",
+      dataIndex: "description",
       sorter: true,
     },
-
+    {
+      title: "Trạng thái",
+      dataIndex: "isActive",
+      render(dom, entity, index, action, schema) {
+        return (
+          <>
+            <Tag color={entity.isActive ? "lime" : "red"}>
+              {entity.isActive ? "ACTIVE" : "INACTIVE"}
+            </Tag>
+          </>
+        );
+      },
+      hideInSearch: true,
+    },
     {
       title: "CreatedAt",
       dataIndex: "createdAt",
@@ -102,7 +116,7 @@ const UserPage = () => {
       width: 50,
       render: (_value, entity, _index, _action) => (
         <Space>
-          <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE} hideChildren>
             <EditOutlined
               style={{
                 fontSize: 20,
@@ -115,13 +129,12 @@ const UserPage = () => {
               }}
             />
           </Access>
-
-          <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.DELETE} hideChildren>
             <Popconfirm
               placement="leftTop"
-              title={"Xác nhận xóa user"}
-              description={"Bạn có chắc chắn muốn xóa user này ?"}
-              onConfirm={() => handleDeleteUser(entity._id)}
+              title={"Xác nhận xóa permission"}
+              description={"Bạn có chắc chắn muốn xóa permission này ?"}
+              onConfirm={() => handleDeletePermission(entity._id)}
               okText="Xác nhận"
               cancelText="Hủy"
             >
@@ -142,51 +155,67 @@ const UserPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = { ...params };
-    if (clone.name) clone.name = `/${clone.name}/i`;
-    if (clone.email) clone.email = `/${clone.email}/i`;
 
-    let temp = queryString.stringify(clone);
+    if (clone.title) clone.title = `/${clone.title}/i`;
+    if (clone.logo) clone.logo = `/${clone.logo}/i`;
+    if (clone.description) clone.description = `/${clone.description}/i`;
+
+    if (clone.isActive) {
+      clone.isActive = clone.isActive === "ACTIVE" ? true : false;
+    }
+
+    let queryStr = queryString.stringify(clone);
 
     let sortBy = "";
-    if (sort && sort.name) {
-      sortBy = sort.name === "ascend" ? "sort=name" : "sort=-name";
-    }
-    if (sort && sort.email) {
-      sortBy = sort.email === "ascend" ? "sort=email" : "sort=-email";
-    }
-    if (sort && sort.createdAt) {
-      sortBy =
-        sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
-    }
-    if (sort && sort.updatedAt) {
-      sortBy =
-        sort.updatedAt === "ascend" ? "sort=updatedAt" : "sort=-updatedAt";
+    if (sort) {
+      if (sort.title) {
+        sortBy = sort.title === "ascend" ? "sort=title" : "sort=-title";
+      }
+      if (sort.logo) {
+        sortBy = sort.logo === "ascend" ? "sort=logo" : "sort=-logo";
+      }
+      if (sort.description) {
+        sortBy =
+          sort.description === "ascend"
+            ? "sort=description"
+            : "sort=-description";
+      }
+      if (sort.createdAt) {
+        sortBy =
+          sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
+      }
+      if (sort.updatedAt) {
+        sortBy =
+          sort.updatedAt === "ascend" ? "sort=updatedAt" : "sort=-updatedAt";
+      }
+      if (sort.isActive) {
+        sortBy =
+          sort.isActive === "ascend" ? "sort=isActive" : "sort=-isActive";
+      }
     }
 
-    //mặc định sort theo updatedAt
-    if (Object.keys(sortBy).length === 0) {
-      temp = `${temp}&sort=-updatedAt`;
+    if (!sortBy) {
+      queryStr = `${queryStr}&sort=-updatedAt`;
     } else {
-      temp = `${temp}&${sortBy}`;
+      queryStr = `${queryStr}&${sortBy}`;
     }
-    temp += "&populate=role&fields=role._id, role.name";
 
-    return temp;
+    return queryStr;
   };
 
   return (
     <div>
-      <Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATE}>
-        <DataTable<IUser>
+      <Access permission={ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE}>
+        <DataTable<IProfile>
           actionRef={tableRef}
-          headerTitle="Danh sách Users"
+          headerTitle="Danh sách Profile"
           rowKey="_id"
           loading={isFetching}
           columns={columns}
-          dataSource={users}
+          dataSource={permissions}
           request={async (params, sort, filter): Promise<any> => {
             const query = buildQuery(params, sort, filter);
-            dispatch(fetchUser({ query }));
+            dispatch(fetchProfile({ query }));
           }}
           scroll={{ x: true }}
           pagination={{
@@ -217,14 +246,15 @@ const UserPage = () => {
           }}
         />
       </Access>
-      <ModalUser
+      <ModalProfile
         openModal={openModal}
         setOpenModal={setOpenModal}
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}
       />
-      <ViewDetailUser
+
+      <ViewDetailProfile
         onClose={setOpenViewDetail}
         open={openViewDetail}
         dataInit={dataInit}
@@ -234,4 +264,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default ProfilePage;
