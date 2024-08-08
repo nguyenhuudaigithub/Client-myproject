@@ -57,7 +57,7 @@ export const callLogout = () => {
 export const callUploadSingleFile = (file: any, folderType: string) => {
   const bodyFormData = new FormData();
   bodyFormData.append("fileUpload", file);
-  return axios<IBackendRes<{ fileName: string }>>({
+  return axios<IBackendRes<{ url: string }>>({
     method: "post",
     url: "/api/v1/files/upload",
     data: bodyFormData,

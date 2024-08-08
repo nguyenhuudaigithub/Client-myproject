@@ -1,4 +1,14 @@
-import { Modal, Row, Col, message, notification, Card } from "antd";
+import {
+  Modal,
+  Row,
+  Col,
+  message,
+  notification,
+  Card,
+  Upload,
+  Space,
+  Button,
+} from "antd";
 import {
   ProForm,
   ProFormGroup,
@@ -8,9 +18,16 @@ import {
   ProFormText,
 } from "@ant-design/pro-components";
 import { isMobile } from "react-device-detect";
-import { callCreateProfile, callUpdateProfile } from "@/config/api";
+import {
+  callCreateProfile,
+  callUpdateProfile,
+  callUploadSingleFile,
+} from "@/config/api";
 import { IProfile } from "@/types/backend";
 import { TAG_LIST } from "@/config/utils";
+import { UploadOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { UploadProps } from "antd/lib";
 
 interface IProps {
   openModal: boolean;
@@ -105,6 +122,41 @@ const ModalProfile = (props: IProps) => {
   const handleReset = () => {
     setDataInit(null);
     setOpenModal(false);
+  };
+
+  //img
+  const [url, setUrl] = useState<string>("");
+
+  const propsUpload: UploadProps = {
+    maxCount: 1,
+    multiple: false,
+    accept: "application/jpg,application/img, .png",
+    async customRequest({ file, onSuccess, onError }: any) {
+      const res = await callUploadSingleFile(file, "profile");
+      if (res && res.data) {
+        setUrl(res.data.url);
+        if (onSuccess) onSuccess("ok");
+      } else {
+        if (onError) {
+          setUrl("");
+          const error = new Error(res.message);
+          onError({ event: error });
+        }
+      }
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        // console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(
+          info?.file?.error?.event?.message ??
+            "Đã có lỗi xảy ra khi upload file."
+        );
+      }
+    },
   };
 
   return (
@@ -216,12 +268,21 @@ const ModalProfile = (props: IProps) => {
           bordered={false}
           style={{ marginBottom: 16 }}
         >
-          <ProFormText
-            name={["heroSection", "image"]}
-            label="Image"
-            placeholder="Nhập link ảnh"
-            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-          />
+          <Row gutter={16}>
+            <Col span={24}>
+              <ProForm.Item
+                label={"Upload file Image"}
+                rules={[{ required: true, message: "Vui lòng upload file!" }]}
+              >
+                <Upload {...propsUpload}>
+                  <Button icon={<UploadOutlined />}>
+                    Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and &lt;
+                    5MB )
+                  </Button>
+                </Upload>
+              </ProForm.Item>
+            </Col>
+          </Row>
           <ProFormText
             name={["heroSection", "text"]}
             label="Text"
@@ -312,11 +373,21 @@ const ModalProfile = (props: IProps) => {
             placeholder="Nhập title"
             rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
           />
-          <ProFormText
-            name={["about", "imageAbout"]}
-            label="Image About"
-            placeholder="Nhập link ảnh"
-          />
+          <Row gutter={16}>
+            <Col span={24}>
+              <ProForm.Item
+                label={"Upload file Image"}
+                rules={[{ required: true, message: "Vui lòng upload file!" }]}
+              >
+                <Upload {...propsUpload}>
+                  <Button icon={<UploadOutlined />}>
+                    Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and &lt;
+                    5MB )
+                  </Button>
+                </Upload>
+              </ProForm.Item>
+            </Col>
+          </Row>
           <ProFormText
             name={["about", "detail"]}
             label="Detail"
@@ -352,106 +423,115 @@ const ModalProfile = (props: IProps) => {
             </ProFormGroup>
           </ProFormList>
         </Card>
+        <Card title="Project" bordered={false} style={{ marginBottom: 16 }}>
+          <ProFormText
+            name={["projectsData", "title"]}
+            label="Title"
+            placeholder="Nhập title"
+            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
+          />
+          <ProFormList
+            name={["projectsData", "data"]}
+            creatorButtonProps={{ creatorButtonText: "Thêm project" }}
+          >
+            <ProFormGroup key="group">
+              <Card
+                title="Projects Data"
+                bordered={false}
+                style={{ marginBottom: 16 }}
+              >
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <ProFormText
+                      name="id"
+                      label="ID"
+                      placeholder="Nhập ID"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <ProFormText
+                      name="title"
+                      label="Title"
+                      placeholder="Nhập title"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <ProFormText
+                      name="description"
+                      label="Description"
+                      placeholder="Nhập description"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                </Row>
 
-        <ProFormText
-          name={["projectsData", "title"]}
-          label="Title"
-          placeholder="Nhập title"
-          rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-        />
-        <ProFormList
-          name={["projectsData", "data"]}
-          creatorButtonProps={{ creatorButtonText: "Thêm project" }}
-        >
-          <ProFormGroup key="group">
-            <Card
-              title="Projects Data"
-              bordered={false}
-              style={{ marginBottom: 16 }}
-            >
-              <Row gutter={16}>
-                <Col span={8}>
-                  <ProFormText
-                    name="id"
-                    label="ID"
-                    placeholder="Nhập ID"
-                    rules={[
-                      { required: true, message: "Vui lòng không bỏ trống" },
-                    ]}
-                  />
-                </Col>
-                <Col span={8}>
-                  <ProFormText
-                    name="title"
-                    label="Title"
-                    placeholder="Nhập title"
-                    rules={[
-                      { required: true, message: "Vui lòng không bỏ trống" },
-                    ]}
-                  />
-                </Col>
-                <Col span={8}>
-                  <ProFormText
-                    name="description"
-                    label="Description"
-                    placeholder="Nhập description"
-                    rules={[
-                      { required: true, message: "Vui lòng không bỏ trống" },
-                    ]}
-                  />
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={8}>
-                  <ProFormText
-                    name="image"
-                    label="Image"
-                    placeholder="Nhập link ảnh"
-                    rules={[
-                      { required: true, message: "Vui lòng không bỏ trống" },
-                    ]}
-                  />
-                </Col>
-                <Col span={8}>
-                  <ProFormText
-                    name="gitUrl"
-                    label="Git URL"
-                    placeholder="Nhập Git URL"
-                    rules={[
-                      { required: true, message: "Vui lòng không bỏ trống" },
-                    ]}
-                  />
-                </Col>
-                <Col span={8}>
-                  <ProFormText
-                    name="previewUrl"
-                    label="Preview URL"
-                    placeholder="Nhập Preview URL"
-                    rules={[
-                      { required: true, message: "Vui lòng không bỏ trống" },
-                    ]}
-                  />
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <ProFormSelect
-                    name="tag"
-                    label="Tag"
-                    options={TAG_LIST}
-                    placeholder="Please select a skill"
-                    rules={[
-                      { required: true, message: "Vui lòng chọn kỹ năng!" },
-                    ]}
-                    allowClear
-                    mode="multiple"
-                    fieldProps={{ showArrow: false }}
-                  />
-                </Col>
-              </Row>
-            </Card>
-          </ProFormGroup>
-        </ProFormList>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <ProFormSelect
+                      name="tag"
+                      label="Tag"
+                      options={TAG_LIST}
+                      placeholder="Nhập tag"
+                      rules={[
+                        { required: true, message: "Vui lòng chọn kỹ năng!" },
+                      ]}
+                      allowClear
+                      mode="multiple"
+                      fieldProps={{ showArrow: false }}
+                    />
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <ProFormText
+                      name="gitUrl"
+                      label="Git URL"
+                      placeholder="Nhập Git URL"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <ProFormText
+                      name="previewUrl"
+                      label="Preview URL"
+                      placeholder="Nhập Preview URL"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <ProForm.Item
+                      label={"Upload file Image"}
+                      rules={[
+                        { required: true, message: "Vui lòng upload file!" },
+                      ]}
+                    >
+                      <Upload {...propsUpload}>
+                        <Button icon={<UploadOutlined />}>
+                          Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and
+                          &lt; 5MB )
+                        </Button>
+                      </Upload>
+                    </ProForm.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </ProFormGroup>
+          </ProFormList>{" "}
+        </Card>
 
         <Card title="Contact" bordered={false} style={{ marginBottom: 16 }}>
           <ProFormText
