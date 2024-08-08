@@ -95,6 +95,7 @@ export interface IHeroInfo {
 export interface IHeroSection {
   image: string;
   text: string;
+  myCv: string;
   infor: IHeroInfo[] | string[];
 }
 
@@ -129,7 +130,7 @@ export interface IProject {
 
 export interface IProjectsData {
   title: string;
-  data: IProject[] | string[];
+  data: IProject[];
 }
 
 export interface ISocialMedia {
@@ -141,7 +142,7 @@ export interface ISocialMedia {
 export interface IContact {
   title: string;
   detail: string;
-  socialMedia: ISocialMedia[] | string[];
+  socialMedia: ISocialMedia[];
 }
 
 export interface IProfile {
@@ -149,11 +150,11 @@ export interface IProfile {
   title: string;
   logo: string;
   description: string;
-  navLink: INavLink[] | string[];
+  navLink: INavLink[];
   heroSection: IHeroSection;
-  achievementsList: IAchievement[] | string[];
+  achievementsList: IAchievement[];
   about: IAbout;
-  tabData: ITabData[] | string[];
+  tabData: ITabData[];
   projectsData: IProjectsData;
   contact: IContact;
   createBy?: IUser;

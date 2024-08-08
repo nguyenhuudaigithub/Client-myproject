@@ -67,6 +67,7 @@ const ModalProfile = (props: IProps) => {
       heroSection: {
         image: heroSection.image,
         text: heroSection.text,
+        myCv: heroSection.myCv,
         infor: heroSection.infor,
       },
       achievementsList: achievementsList,
@@ -268,6 +269,12 @@ const ModalProfile = (props: IProps) => {
           bordered={false}
           style={{ marginBottom: 16 }}
         >
+          <ProFormText
+            name={["heroSection", "text"]}
+            label="Text"
+            placeholder="Nhập text"
+            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
+          />
           <Row gutter={16}>
             <Col span={24}>
               <ProForm.Item
@@ -283,12 +290,21 @@ const ModalProfile = (props: IProps) => {
               </ProForm.Item>
             </Col>
           </Row>
-          <ProFormText
-            name={["heroSection", "text"]}
-            label="Text"
-            placeholder="Nhập text"
-            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-          />
+          <Row gutter={16}>
+            <Col span={24}>
+              <ProForm.Item
+                label={"Upload file CV"}
+                rules={[{ required: true, message: "Vui lòng upload file!" }]}
+              >
+                <Upload {...propsUpload}>
+                  <Button icon={<UploadOutlined />}>
+                    Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and &lt;
+                    5MB )
+                  </Button>
+                </Upload>
+              </ProForm.Item>
+            </Col>
+          </Row>
           <ProFormList
             name={["heroSection", "infor"]}
             label="Infor"
