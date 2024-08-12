@@ -1,20 +1,20 @@
-import { IProfile } from "@/types/backend";
+import { IBlog } from "@/types/backend";
 import { Descriptions, Drawer } from "antd";
 import dayjs from "dayjs";
 
 interface IProps {
   onClose: (v: boolean) => void;
   open: boolean;
-  dataInit: IProfile | null;
+  dataInit: IBlog | null;
   setDataInit: (v: any) => void;
 }
-const ViewDetailProfile = (props: IProps) => {
+const ViewDetailBlog = (props: IProps) => {
   const { onClose, open, dataInit, setDataInit } = props;
 
   return (
     <>
       <Drawer
-        title="Thông Tin Profile"
+        title="Thông Tin Blog"
         placement="right"
         onClose={() => {
           onClose(false);
@@ -25,14 +25,14 @@ const ViewDetailProfile = (props: IProps) => {
         maskClosable={false}
       >
         <Descriptions title="" bordered column={2} layout="vertical">
-          <Descriptions.Item label="Tên Profile">
+          <Descriptions.Item label="Tiêu đề">
             {dataInit?.title}
           </Descriptions.Item>
-          <Descriptions.Item label="Logo">{dataInit?.logo}</Descriptions.Item>
-
-          <Descriptions.Item label="Thuộc Module">
+          <Descriptions.Item label="Description">
             {dataInit?.description}
           </Descriptions.Item>
+
+          <Descriptions.Item label="Img">{dataInit?.img}</Descriptions.Item>
 
           <Descriptions.Item label="Ngày tạo">
             {dataInit && dataInit.createdAt
@@ -50,4 +50,4 @@ const ViewDetailProfile = (props: IProps) => {
   );
 };
 
-export default ViewDetailProfile;
+export default ViewDetailBlog;

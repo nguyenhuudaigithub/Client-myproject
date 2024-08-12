@@ -6,8 +6,8 @@ import {
   notification,
   Card,
   Upload,
-  Space,
   Button,
+  Form,
 } from "antd";
 import {
   ProForm,
@@ -24,10 +24,10 @@ import {
   callUploadSingleFile,
 } from "@/config/api";
 import { IProfile } from "@/types/backend";
-import { TAG_LIST } from "@/config/utils";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { UploadProps } from "antd/lib";
+import { TAG_LIST } from "@/config/utils";
 
 interface IProps {
   openModal: boolean;
@@ -63,103 +63,130 @@ const ModalProfile = (props: IProps) => {
       title,
       logo,
       description,
-      navLink: navLink,
+      navLink,
       heroSection: {
-        image: heroSection.image,
-        text: heroSection.text,
-        myCv: heroSection.myCv,
-        infor: heroSection.infor,
+        image: heroSection?.image,
+        text: heroSection?.text,
+        myCv: heroSection?.myCv,
+        infor: heroSection?.infor,
       },
       achievementsList: achievementsList,
       about: {
-        title: about.title,
-        imageAbout: about.imageAbout,
-        detail: about.detail,
+        title: about?.title,
+        imageAbout: about?.imageAbout,
+        detail: about?.detail,
       },
       tabData: tabData,
       projectsData: {
-        title: projectsData.title,
-        data: projectsData.data,
+        title: projectsData?.title,
+        data: projectsData?.data,
       },
       contact: {
-        title: contact.title,
-        detail: contact.detail,
-        socialMedia: contact.socialMedia,
+        title: contact?.title,
+        detail: contact?.detail,
+        socialMedia: contact?.socialMedia,
       },
       isActive,
     };
 
     console.log(profile);
 
-    if (dataInit?._id) {
-      // update profile
-      const res = await callUpdateProfile(profile, dataInit._id);
-      if (res.data) {
-        message.success("Cập nhật profile thành công");
-        handleReset();
-        reloadTable();
+    try {
+      if (dataInit?._id) {
+        // Update profile
+        const res = await callUpdateProfile(profile, dataInit._id);
+        if (res.data) {
+          message.success("Cập nhật profile thành công");
+          handleReset();
+          reloadTable();
+        } else {
+          notification.error({
+            message: "Có lỗi xảy ra",
+            description: res.message,
+          });
+        }
       } else {
-        notification.error({
-          message: "Có lỗi xảy ra",
-          description: res.message,
-        });
+        // Create profile
+        const res = await callCreateProfile(profile);
+        if (res.data) {
+          message.success("Thêm mới profile thành công");
+          handleReset();
+          reloadTable();
+        } else {
+          notification.error({
+            message: "Có lỗi xảy ra",
+            description: res.message,
+          });
+        }
       }
-    } else {
-      // create profile
-      const res = await callCreateProfile(profile);
-      if (res.data) {
-        message.success("Thêm mới profile thành công");
-        handleReset();
-        reloadTable();
-      } else {
-        notification.error({
-          message: "Có lỗi xảy ra",
-          description: res.message,
-        });
-      }
+    } catch (error) {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: "Lỗi không xác định.",
+      });
     }
   };
 
   const handleReset = () => {
     setDataInit(null);
     setOpenModal(false);
+    form.resetFields();
   };
 
-  //img
-  const [url, setUrl] = useState<string>("");
-
-  const propsUpload: UploadProps = {
-    maxCount: 1,
-    multiple: false,
-    accept: "application/jpg,application/img, .png",
-    async customRequest({ file, onSuccess, onError }: any) {
-      const res = await callUploadSingleFile(file, "profile");
-      if (res && res.data) {
-        setUrl(res.data.url);
-        if (onSuccess) onSuccess("ok");
-      } else {
-        if (onError) {
-          setUrl("");
-          const error = new Error(res.message);
-          onError({ event: error });
+  const generateUploadProps = (namePath: (string | number)[]) => {
+    const propsUpload: UploadProps = {
+      maxCount: 1,
+      multiple: false,
+      accept: "image/*",
+      async customRequest({ file, onSuccess, onError }: any) {
+        const res = await callUploadSingleFile(file, "images");
+        if (res && res.data) {
+          form.setFieldValue(namePath, res.data.url);
+          if (onSuccess) onSuccess("ok");
+        } else {
+          if (onError) {
+            const error = new Error(res.message);
+            onError({ event: error });
+          }
         }
-      }
-    },
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        // console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(
-          info?.file?.error?.event?.message ??
-            "Đã có lỗi xảy ra khi upload file."
-        );
-      }
-    },
+      },
+      onChange(info) {
+        if (info.file.status === "done") {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === "error") {
+          message.error(
+            info?.file?.error?.event?.message ??
+              "Đã có lỗi xảy ra khi upload file."
+          );
+        }
+      },
+    };
+    return propsUpload;
   };
 
+  const renderImageUploadSection = (
+    namePath: (string | number)[],
+    label: string
+  ) => (
+    <Row gutter={16}>
+      <Col span={17}>
+        <ProFormText
+          name={namePath}
+          label={label}
+          placeholder="Nhập liên kết hình ảnh"
+        />
+      </Col>
+      <Col span={7}>
+        <ProForm.Item label="  ">
+          <Upload {...generateUploadProps(namePath)}>
+            <Button icon={<UploadOutlined />}>
+              Tải lên ảnh của bạn (&lt; 5MB)
+            </Button>
+          </Upload>
+        </ProForm.Item>
+      </Col>
+    </Row>
+  );
   return (
     <Modal
       title={dataInit?._id ? "Cập nhật Profile" : "Tạo mới Profile"}
@@ -176,9 +203,10 @@ const ModalProfile = (props: IProps) => {
       <ProForm
         form={form}
         onFinish={submitProfile}
-        initialValues={dataInit?._id ? dataInit : {}}
+        initialValues={dataInit || {}}
         scrollToFirstError
         preserve={false}
+        submitter={false}
       >
         <Row gutter={16}>
           <Col lg={12} md={12} sm={24} xs={24}>
@@ -198,23 +226,14 @@ const ModalProfile = (props: IProps) => {
             />
           </Col>
           <Col lg={12} md={12} sm={24} xs={24}>
-            {dataInit?._id ? (
-              <ProFormSelect
-                name="isActive"
-                label="Trạng thái"
-                valueEnum={{ true: "Active", false: "Inactive" }}
-                rules={[
-                  { required: true, message: "Vui lòng chọn trạng thái!" },
-                ]}
-              />
-            ) : (
-              <ProFormSelect
-                name="isActive"
-                label="Trạng thái"
-                disabled
-                initialValue={false}
-              />
-            )}
+            <ProFormSwitch
+              label="Trạng thái"
+              name="isActive"
+              checkedChildren="ACTIVE"
+              unCheckedChildren="INACTIVE"
+              disabled={!dataInit?._id}
+              initialValue={!dataInit?._id ? false : undefined}
+            />
           </Col>
           <Col lg={12} md={12} sm={24} xs={24}>
             <ProFormText
@@ -275,36 +294,10 @@ const ModalProfile = (props: IProps) => {
             placeholder="Nhập text"
             rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
           />
-          <Row gutter={16}>
-            <Col span={24}>
-              <ProForm.Item
-                label={"Upload file Image"}
-                rules={[{ required: true, message: "Vui lòng upload file!" }]}
-              >
-                <Upload {...propsUpload}>
-                  <Button icon={<UploadOutlined />}>
-                    Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and &lt;
-                    5MB )
-                  </Button>
-                </Upload>
-              </ProForm.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <ProForm.Item
-                label={"Upload file CV"}
-                rules={[{ required: true, message: "Vui lòng upload file!" }]}
-              >
-                <Upload {...propsUpload}>
-                  <Button icon={<UploadOutlined />}>
-                    Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and &lt;
-                    5MB )
-                  </Button>
-                </Upload>
-              </ProForm.Item>
-            </Col>
-          </Row>
+
+          {renderImageUploadSection(["heroSection", "image"], "Image URL")}
+          {renderImageUploadSection(["heroSection", "myCv"], "CV")}
+
           <ProFormList
             name={["heroSection", "infor"]}
             label="Infor"
@@ -334,15 +327,15 @@ const ModalProfile = (props: IProps) => {
         </Card>
 
         <Card
-          title="Danh sách thành tựu"
+          title="Achievements List"
           bordered={false}
           style={{ marginBottom: 16 }}
         >
           <ProFormList
             name="achievementsList"
-            creatorButtonProps={{ creatorButtonText: "Thêm thành tựu" }}
+            creatorButtonProps={{ creatorButtonText: "Thêm Achievement" }}
           >
-            <ProFormGroup key="group" title="Thành tựu">
+            <ProFormGroup key="group" title="Achievement">
               <Card style={{ marginBottom: 16 }}>
                 <Row gutter={16}>
                   <Col span={6}>
@@ -382,92 +375,35 @@ const ModalProfile = (props: IProps) => {
           </ProFormList>
         </Card>
 
-        <Card title="About" bordered={false} style={{ marginBottom: 16 }}>
+        <Card
+          title="About Section"
+          bordered={false}
+          style={{ marginBottom: 16 }}
+        >
           <ProFormText
             name={["about", "title"]}
             label="Title"
             placeholder="Nhập title"
             rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
           />
-          <Row gutter={16}>
-            <Col span={24}>
-              <ProForm.Item
-                label={"Upload file Image"}
-                rules={[{ required: true, message: "Vui lòng upload file!" }]}
-              >
-                <Upload {...propsUpload}>
-                  <Button icon={<UploadOutlined />}>
-                    Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and &lt;
-                    5MB )
-                  </Button>
-                </Upload>
-              </ProForm.Item>
-            </Col>
-          </Row>
           <ProFormText
             name={["about", "detail"]}
             label="Detail"
             placeholder="Nhập detail"
             rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
           />
+          {renderImageUploadSection(["about", "imageAbout"], "Image URL")}
         </Card>
 
         <Card title="Tab Data" bordered={false} style={{ marginBottom: 16 }}>
           <ProFormList
             name="tabData"
-            creatorButtonProps={{ creatorButtonText: "Thêm tab" }}
+            creatorButtonProps={{ creatorButtonText: "Thêm Tab" }}
           >
-            <ProFormGroup key="group">
-              <ProFormText
-                name="title"
-                label="Title"
-                placeholder="Nhập title"
-                rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-              />
-              <ProFormText
-                name="id"
-                label="Id"
-                placeholder="Nhập id"
-                rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-              />
-              <ProFormText
-                name="content"
-                label="Content"
-                placeholder="Nhập content"
-                rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-              />
-            </ProFormGroup>
-          </ProFormList>
-        </Card>
-        <Card title="Project" bordered={false} style={{ marginBottom: 16 }}>
-          <ProFormText
-            name={["projectsData", "title"]}
-            label="Title"
-            placeholder="Nhập title"
-            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
-          />
-          <ProFormList
-            name={["projectsData", "data"]}
-            creatorButtonProps={{ creatorButtonText: "Thêm project" }}
-          >
-            <ProFormGroup key="group">
-              <Card
-                title="Projects Data"
-                bordered={false}
-                style={{ marginBottom: 16 }}
-              >
+            <Card style={{ marginBottom: 16 }}>
+              <ProFormGroup key="group">
                 <Row gutter={16}>
-                  <Col span={8}>
-                    <ProFormText
-                      name="id"
-                      label="ID"
-                      placeholder="Nhập ID"
-                      rules={[
-                        { required: true, message: "Vui lòng không bỏ trống" },
-                      ]}
-                    />
-                  </Col>
-                  <Col span={8}>
+                  <Col span={12}>
                     <ProFormText
                       name="title"
                       label="Title"
@@ -477,7 +413,60 @@ const ModalProfile = (props: IProps) => {
                       ]}
                     />
                   </Col>
-                  <Col span={8}>
+                  <Col span={12}>
+                    <ProFormText
+                      name="id"
+                      label="Id"
+                      placeholder="Nhập id"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                </Row>
+                <ProFormText
+                  name="content"
+                  label="Content"
+                  placeholder="Nhập content"
+                  rules={[
+                    { required: true, message: "Vui lòng không bỏ trống" },
+                  ]}
+                />
+              </ProFormGroup>
+            </Card>
+          </ProFormList>
+        </Card>
+
+        <Card
+          title="Projects Data"
+          bordered={false}
+          style={{ marginBottom: 16 }}
+        >
+          <ProFormText
+            name={["projectsData", "title"]}
+            label="Title"
+            placeholder="Nhập title"
+            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
+          />
+          {renderImageUploadSection(["uploadImage"], "Get Link Img")}
+          <ProFormList
+            name={["projectsData", "data"]}
+            creatorButtonProps={{ creatorButtonText: "Thêm dự án" }}
+          >
+            <ProFormGroup key="group" title="Project">
+              <Card style={{ marginBottom: 16, width: "100%" }}>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <ProFormText
+                      name="title"
+                      label="Title"
+                      placeholder="Nhập title"
+                      rules={[
+                        { required: true, message: "Vui lòng không bỏ trống" },
+                      ]}
+                    />
+                  </Col>
+                  <Col span={12}>
                     <ProFormText
                       name="description"
                       label="Description"
@@ -487,66 +476,46 @@ const ModalProfile = (props: IProps) => {
                       ]}
                     />
                   </Col>
-                </Row>
 
-                <Row gutter={16}>
-                  <Col span={24}>
-                    <ProFormSelect
-                      name="tag"
-                      label="Tag"
-                      options={TAG_LIST}
-                      placeholder="Nhập tag"
-                      rules={[
-                        { required: true, message: "Vui lòng chọn kỹ năng!" },
-                      ]}
-                      allowClear
-                      mode="multiple"
-                      fieldProps={{ showArrow: false }}
-                    />
-                  </Col>
-                </Row>
-                <Row gutter={16}>
-                  <Col span={8}>
+                  <Col span={12}>
                     <ProFormText
                       name="gitUrl"
                       label="Git URL"
                       placeholder="Nhập Git URL"
-                      rules={[
-                        { required: true, message: "Vui lòng không bỏ trống" },
-                      ]}
                     />
                   </Col>
-                  <Col span={8}>
+                  <Col span={12}>
                     <ProFormText
                       name="previewUrl"
                       label="Preview URL"
                       placeholder="Nhập Preview URL"
+                    />
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <ProFormText
+                      name="image"
+                      label="Image URL"
+                      placeholder="Nhập liên kết hình ảnh"
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <ProFormSelect
+                      name="tag"
+                      label="Tag"
+                      placeholder="Chọn tag"
+                      mode="multiple"
+                      options={TAG_LIST}
                       rules={[
                         { required: true, message: "Vui lòng không bỏ trống" },
                       ]}
                     />
                   </Col>
                 </Row>
-                <Row gutter={16}>
-                  <Col span={24}>
-                    <ProForm.Item
-                      label={"Upload file Image"}
-                      rules={[
-                        { required: true, message: "Vui lòng upload file!" },
-                      ]}
-                    >
-                      <Upload {...propsUpload}>
-                        <Button icon={<UploadOutlined />}>
-                          Tải lên ảnh của bạn ( Hỗ trợ *.jpg, *.png, *.img, and
-                          &lt; 5MB )
-                        </Button>
-                      </Upload>
-                    </ProForm.Item>
-                  </Col>
-                </Row>
               </Card>
             </ProFormGroup>
-          </ProFormList>{" "}
+          </ProFormList>
         </Card>
 
         <Card title="Contact" bordered={false} style={{ marginBottom: 16 }}>
@@ -562,10 +531,11 @@ const ModalProfile = (props: IProps) => {
             placeholder="Nhập detail"
             rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
           />
-
           <ProFormList
             name={["contact", "socialMedia"]}
-            creatorButtonProps={{ creatorButtonText: "Thêm mạng xã hội" }}
+            creatorButtonProps={{
+              creatorButtonText: "Thêm liên kết mạng xã hội",
+            }}
           >
             <ProFormGroup key="group" title="Social Media">
               <Card style={{ marginBottom: 16 }}>

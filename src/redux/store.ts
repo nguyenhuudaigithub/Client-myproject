@@ -4,6 +4,7 @@ import userReducer from "./slice/userSlide";
 import permissionReducer from "./slice/permissionSlide";
 import roleReducer from "./slice/roleSlide";
 import profileReducer from "./slice/profileSlide";
+import blogReducer from "./slice/blogSlide";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     profile: profileReducer,
     permission: permissionReducer,
     role: roleReducer,
+    blog: blogReducer,
   },
 });
 

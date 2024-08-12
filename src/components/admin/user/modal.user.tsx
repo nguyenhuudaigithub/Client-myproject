@@ -48,8 +48,7 @@ const ModalUser = (props: IProps) => {
   }, [dataInit]);
 
   const submitUser = async (valuesForm: any) => {
-    const { name, email, password, address, age, gender, role, company } =
-      valuesForm;
+    const { name, email, password, address, age, gender, role } = valuesForm;
     if (dataInit?._id) {
       //update
       const user = {
@@ -61,10 +60,6 @@ const ModalUser = (props: IProps) => {
         gender,
         address,
         role: role.value,
-        company: {
-          _id: company.value,
-          name: company.label,
-        },
       };
 
       const res = await callUpdateUser(user);
@@ -88,10 +83,6 @@ const ModalUser = (props: IProps) => {
         gender,
         address,
         role: role.value,
-        company: {
-          _id: company.value,
-          name: company.label,
-        },
       };
       const res = await callCreateUser(user);
       if (res.data) {
@@ -229,13 +220,7 @@ const ModalUser = (props: IProps) => {
               />
             </ProForm.Item>
           </Col>
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <ProForm.Item
-              name="company"
-              label="Thuộc Công Ty"
-              rules={[{ required: true, message: "Vui lòng chọn company!" }]}
-            ></ProForm.Item>
-          </Col>
+
           <Col lg={12} md={12} sm={24} xs={24}>
             <ProFormText
               label="Địa chỉ"

@@ -191,19 +191,23 @@
     }
 }
 
-.company-section {
-    .company-content {
-        padding-top: 50px;
+.blogs-section {
+    margin-top:20px;
+    .blogs-content {
+        padding-top: 2px;
 
         .card-customize {
             height: 200px;
             width: 200px;
-            margin: 20px auto;
         }
     }
 
 }
 
+.ant-pagination-item a {
+    color: white !important;
+  }
+  
 
 .home-section {
 
@@ -236,18 +240,18 @@
     }
 }
 
-.detail-job-section {
+.detail-blog-section {
+   
     .header {
-        margin: 20px 0;
-        color: #353535;
+        margin: 90px 10px 0 0;
         font-size: 27px;
+        Font-weight: 700;
     }
 
     .btn-apply {
         width: 100%;
         cursor: pointer;
         text-align: center;
-        color: #fff;
         text-decoration: none;
         -webkit-font-smoothing: antialiased;
         font-size: 20px;
@@ -273,7 +277,6 @@
 
     h2 {
         font-size: 23px;
-        color: #353535;
         font-weight: 400;
         margin: 25px 0 0;
     }
@@ -287,16 +290,14 @@
     }
 
     p {
-        color: #3a3a3a;
         font-size: 16px;
         line-height: 1.7em;
         width: 100%;
         line-height: 2em;
     }
 
-    .company {
-        margin: 20px 0;
-        color: #353535;
+    .blog {
+        margin: 90px 0;
         font-size: 27px;
         display: flex;
         flex-direction: column;

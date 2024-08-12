@@ -44,7 +44,7 @@ const ProjectsSection: React.FC<Data> = ({ projectsData }) => {
   };
 
   const allTags = [
-    "All",
+    // "All",
     ...new Set(
       projectsData.data
         .flatMap((project) => project.tag)

@@ -7,6 +7,8 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   BugOutlined,
+  ProfileOutlined,
+  FileWordOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -56,6 +58,12 @@ const LayoutAdmin = () => {
           item.method === ALL_PERMISSIONS.PROFILES.GET_PAGINATE.method
       );
 
+      const viewBlog = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.BLOG.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.BLOG.GET_PAGINATE.method
+      );
+
       const full = [
         {
           label: <Link to="/admin">Dashboard</Link>,
@@ -96,7 +104,16 @@ const LayoutAdmin = () => {
               {
                 label: <Link to="/admin/profile">Profile</Link>,
                 key: "/admin/profile",
-                icon: <ExceptionOutlined />,
+                icon: <ProfileOutlined />,
+              },
+            ]
+          : []),
+        ...(viewBlog
+          ? [
+              {
+                label: <Link to="/admin/blog">Blog</Link>,
+                key: "/admin/blog",
+                icon: <FileWordOutlined />,
               },
             ]
           : []),

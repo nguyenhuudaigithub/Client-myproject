@@ -28,6 +28,9 @@ import ProtectedRoute from "./components/share/protected-route.ts";
 import { IProfile } from "./types/backend.js";
 import { fetchAccount } from "./redux/slice/accountSlide.js";
 import ProfilePage from "./pages/admin/profile.js";
+import ClientBlogPage from "./pages/blog/index.js";
+import ClientBlogDetailPage from "./pages/blog/detail.js";
+import BlogPage from "./pages/admin/blog.js";
 
 const LayoutClient: React.FC<{ profileData: IProfile }> = ({ profileData }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -101,7 +104,11 @@ export default function App() {
         </LayoutApp>
       ),
       errorElement: <NotFound />,
-      children: [{ index: true, element: <HomePage data={profileData} /> }],
+      children: [
+        { index: true, element: <HomePage data={profileData} /> },
+        { path: "blogs", element: <ClientBlogPage /> },
+        { path: "blogs/:id", element: <ClientBlogDetailPage /> },
+      ],
     },
     {
       path: "/admin",
@@ -149,6 +156,22 @@ export default function App() {
           element: (
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "blog",
+          element: (
+            <ProtectedRoute>
+              <BlogPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "send",
+          element: (
+            <ProtectedRoute>
+              <BlogPage />
             </ProtectedRoute>
           ),
         },

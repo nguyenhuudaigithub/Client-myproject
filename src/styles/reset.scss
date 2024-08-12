@@ -14,7 +14,7 @@
     overflow: hidden;
 }
 
-.modal-company {
+.modal-blog {
     &.close {
         transform: scale(0);
         opacity: 0;
@@ -24,7 +24,7 @@
     }
 }
 
-.modal-company-root {
+.modal-blog-root {
     &.close {
         .ant-modal-mask {
             background-color: unset !important;

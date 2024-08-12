@@ -7,6 +7,8 @@ import {
   IPermission,
   IRole,
   IProfile,
+  IBlog,
+  ISend,
 } from "@/types/backend";
 import axios from "config/axios-customize";
 
@@ -150,27 +152,6 @@ export const callFetchRoleById = (id: string) => {
  * 
 Module Profile
  */
-// export const callCreateProfile = (pr: IProfile) => {
-//   return axios.post<IBackendRes<IProfile>>("/api/v1/profile", { ...pr });
-// };
-
-// export const callUpdateProfile = (pr: IProfile) => {
-//   return axios.patch<IBackendRes<IProfile>>(`/api/v1/profile`, { ...pr });
-// };
-
-// export const callDeleteProfile = (id: string) => {
-//   return axios.delete<IBackendRes<IProfile>>(`/api/v1/profile/${id}`);
-// };
-
-// export const callFetchProfile = (query: string) => {
-//   return axios.get<IBackendRes<IModelPaginate<IProfile>>>(
-//     `/api/v1/profile?${query}`
-//   );
-// };
-
-// export const callFetchProfileById = (id: string) => {
-//   return axios.get<IBackendRes<IProfile>>(`/api/v1/profile/${id}`);
-// };
 
 export const callCreateProfile = (profile: IProfile) => {
   return axios.post<IBackendRes<IProfile>>("/api/v1/profile", {
@@ -200,4 +181,64 @@ export const callFetchProfileById = (id: string) => {
 
 export const callFetchFontEnd = () => {
   return axios.get<IBackendRes<IProfile>>(`/api/v1/profile/fontend`);
+};
+
+/**
+ * 
+Module Blog
+ */
+
+export const callCreateBlog = (blogs: IBlog) => {
+  return axios.post<IBackendRes<IBlog>>("/api/v1/blogs", {
+    ...blogs,
+  });
+};
+
+export const callUpdateBlog = (blogs: IBlog, id: string) => {
+  return axios.patch<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`, {
+    ...blogs,
+  });
+};
+
+export const callDeleteBlog = (id: string) => {
+  return axios.delete<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`);
+};
+
+export const callFetchBlog = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IBlog>>>(
+    `/api/v1/blogs?${query}`
+  );
+};
+
+export const callFetchBlogAdmin = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IBlog>>>(
+    `/api/v1/blogs/admin?${query}`
+  );
+};
+
+export const callFetchBlogById = (id: string) => {
+  return axios.get<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`);
+};
+
+/**
+ * 
+Module Send
+ */
+
+export const callCreateSend = (send: ISend) => {
+  return axios.post<IBackendRes<ISend>>("/api/v1/send", {
+    ...send,
+  });
+};
+
+export const callDeleteSend = (id: string) => {
+  return axios.delete<IBackendRes<ISend>>(`/api/v1/send/${id}`);
+};
+
+export const callFetchSend = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<ISend>>>(`/api/v1/send?${query}`);
+};
+
+export const callFetchSendById = (id: string) => {
+  return axios.get<IBackendRes<ISend>>(`/api/v1/send/${id}`);
 };

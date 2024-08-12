@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 interface Info {
   title: string;
-  time: string;
+  time: number;
 }
 
 interface HeroSectionData {
@@ -83,8 +83,15 @@ const HeroSection: React.FC<HeroData> = ({ heroData }) => {
               src={heroData.image}
               alt="hero image"
               className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-full"
-              width={400}
-              height={400}
+              style={{
+                width: "400px",
+                height: "400px",
+                objectFit: "cover",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
             />
           </div>
         </motion.div>

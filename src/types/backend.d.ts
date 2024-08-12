@@ -89,14 +89,14 @@ export interface INavLink {
 
 export interface IHeroInfo {
   title: string;
-  time: string;
+  time: number;
 }
 
 export interface IHeroSection {
   image: string;
   text: string;
   myCv: string;
-  infor: IHeroInfo[] | string[];
+  infor: IHeroInfo[];
 }
 
 export interface IAchievement {
@@ -163,6 +163,33 @@ export interface IProfile {
   createdAt?: string;
   updatedAt?: string;
   isActive: boolean;
+  updateBy?: IUser;
+  deletecBy?: IUser;
+}
+
+export interface IBlog {
+  _id?: string;
+  title: string;
+  img: string;
+  description: string;
+  detail: string;
+  createBy?: IUser;
+  isDeleted?: boolean;
+  deletedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  isActive: boolean;
+  updateBy?: IUser;
+  deletecBy?: IUser;
+}
+
+export interface ISend {
+  _id?: string;
+  email: string;
+  subject: string;
+  message: string;
+  isDeleted?: boolean;
+  deletedAt?: string | null;
   updateBy?: IUser;
   deletecBy?: IUser;
 }
