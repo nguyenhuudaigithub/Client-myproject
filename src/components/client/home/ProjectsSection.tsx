@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useRef } from "react";
-
 import { motion, useInView } from "framer-motion";
 import ProjectTag from "./ProjectTag";
 import ProjectCard from "./ProjectCard";
@@ -34,9 +33,10 @@ const ProjectsSection: React.FC<Data> = ({ projectsData }) => {
     setTag(newTag);
   };
 
-  const filteredProjects = projectsData.data.filter((project) =>
-    project.tag.includes(tag)
-  );
+  const filteredProjects =
+    tag === "All"
+      ? projectsData.data
+      : projectsData.data.filter((project) => project.tag.includes(tag));
 
   const cardVariants = {
     initial: { y: 50, opacity: 0 },
@@ -44,12 +44,8 @@ const ProjectsSection: React.FC<Data> = ({ projectsData }) => {
   };
 
   const allTags = [
-    // "All",
-    ...new Set(
-      projectsData.data
-        .flatMap((project) => project.tag)
-        .filter((tag) => tag !== "All")
-    ),
+    "All",
+    ...new Set(projectsData.data.flatMap((project) => project.tag)),
   ];
 
   return (

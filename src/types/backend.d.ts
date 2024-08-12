@@ -189,7 +189,7 @@ export interface ISend {
   subject: string;
   message: string;
   isDeleted?: boolean;
+  createdAt?: string;
   deletedAt?: string | null;
-  updateBy?: IUser;
   deletecBy?: IUser;
 }

@@ -204,8 +204,12 @@
 
 }
 
-.ant-pagination-item a {
-    color: white !important;
+.ant-pagination ul li{
+    list-style: none; 
+  }
+  
+  ul li {
+    background-color: #fff; 
   }
   
 

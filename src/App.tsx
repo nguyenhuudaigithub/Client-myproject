@@ -31,6 +31,7 @@ import ProfilePage from "./pages/admin/profile.js";
 import ClientBlogPage from "./pages/blog/index.js";
 import ClientBlogDetailPage from "./pages/blog/detail.js";
 import BlogPage from "./pages/admin/blog.js";
+import SendPage from "./pages/admin/send.js";
 
 const LayoutClient: React.FC<{ profileData: IProfile }> = ({ profileData }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -171,7 +172,7 @@ export default function App() {
           path: "send",
           element: (
             <ProtectedRoute>
-              <BlogPage />
+              <SendPage />
             </ProtectedRoute>
           ),
         },

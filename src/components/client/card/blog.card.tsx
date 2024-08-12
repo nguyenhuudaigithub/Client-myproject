@@ -18,7 +18,7 @@ const BlogCard = (props: IProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(12);
   const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState("");
   const [sortQuery, setSortQuery] = useState("sort=-updatedAt");
@@ -142,7 +142,12 @@ const BlogCard = (props: IProps) => {
           {showPagination && (
             <>
               <div style={{ marginTop: 30 }}></div>
-              <Row style={{ display: "flex", justifyContent: "center" }}>
+              <Row
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
                 <Pagination
                   current={current}
                   total={total}

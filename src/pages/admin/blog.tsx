@@ -209,7 +209,7 @@ const BlogPage = () => {
       <Access permission={ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE}>
         <DataTable<IBlog>
           actionRef={tableRef}
-          headerTitle="Danh sách Profile"
+          headerTitle="Danh sách Blog"
           rowKey="_id"
           loading={isFetching}
           columns={columns}

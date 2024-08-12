@@ -54,6 +54,10 @@ const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
 
   const itemsDropdown = [
     {
+      label: <NavLink href="/admin" title="Trang Quản Trị" />,
+      key: "admin",
+    },
+    {
       label: (
         <label
           style={{ cursor: "pointer" }}
@@ -72,10 +76,6 @@ const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
         </label>
       ),
       key: "logout",
-    },
-    {
-      label: <NavLink href="/admin" title="Trang Quản Trị" />,
-      key: "admin",
     },
   ];
 
@@ -106,7 +106,7 @@ const Header: React.FC<HeroSectionProps> = ({ logo, nav }) => {
           <div className="menu hidden md:block md:w-auto" id="navbar">
             <ul className="flex p-4 md:p-0 md:flex-row md:space-x-8 mt-0">
               {nav.map((link, index) => (
-                <li key={index}>
+                <li key={index} className="bg-[#121212] bg-opacity-100">
                   <NavLink href={link.path} title={link.title} />
                 </li>
               ))}

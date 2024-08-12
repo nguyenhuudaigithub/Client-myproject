@@ -9,6 +9,7 @@ import {
   BugOutlined,
   ProfileOutlined,
   FileWordOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -64,6 +65,12 @@ const LayoutAdmin = () => {
           item.method === ALL_PERMISSIONS.BLOG.GET_PAGINATE.method
       );
 
+      const viewSend = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.SEND.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.SEND.GET_PAGINATE.method
+      );
+
       const full = [
         {
           label: <Link to="/admin">Dashboard</Link>,
@@ -114,6 +121,16 @@ const LayoutAdmin = () => {
                 label: <Link to="/admin/blog">Blog</Link>,
                 key: "/admin/blog",
                 icon: <FileWordOutlined />,
+              },
+            ]
+          : []),
+
+        ...(viewSend
+          ? [
+              {
+                label: <Link to="/admin/send">Send</Link>,
+                key: "/admin/send",
+                icon: <MailOutlined />,
               },
             ]
           : []),

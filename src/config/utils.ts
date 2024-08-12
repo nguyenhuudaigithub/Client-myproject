@@ -1,12 +1,12 @@
 import { grey, green, blue, red, orange } from "@ant-design/colors";
 
 export const TAG_LIST = [
-  { label: "All", value: "ALL" },
-  { label: "BackEnd", value: "BACKEND" },
-  { label: "FontEnd", value: "FONTEND" },
-  { label: "Mobile", value: "MOBILE" },
+  { label: "All", value: "All" },
+  { label: "BackEnd", value: "BackEnd" },
+  { label: "FontEnd", value: "FontEnd" },
+  { label: "Mobile", value: "Mobile" },
   { label: "AI", value: "AI" },
-  { label: "BlockChain", value: "BLOCKCHAIN" },
+  { label: "BlockChain", value: "BlockChain" },
 ];
 
 export const LOCATION_LIST = [
