@@ -45,7 +45,11 @@ const ProjectsSection: React.FC<Data> = ({ projectsData }) => {
 
   const allTags = [
     "All",
-    ...new Set(projectsData.data.flatMap((project) => project.tag)),
+    ...new Set(
+      projectsData.data
+        .flatMap((project) => project.tag)
+        .filter((tag) => tag !== "All")
+    ),
   ];
 
   return (
@@ -66,7 +70,7 @@ const ProjectsSection: React.FC<Data> = ({ projectsData }) => {
       <ul ref={ref} className="grid md:grid-cols-3 gap-8 md:gap-12">
         {filteredProjects.map((project, index) => (
           <motion.li
-            key={project.id}
+            key={index}
             variants={cardVariants}
             initial="initial"
             animate={isInView ? "animate" : "initial"}

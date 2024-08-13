@@ -52,23 +52,18 @@ const HeroSection: React.FC<HeroData> = ({ heroData }) => {
           </p>
           <div>
             <Link
-              to="/#contact"
+              to="/blogs"
               className="px-6 inline-block py-3 w-full sm:w-fit rounded-full mr-4 bg-gradient-to-br from-primary-500 to-secondary-500 hover:bg-slate-200 text-white"
             >
               Hire Me
             </Link>
             <Link
-              to="/"
+              to={heroData.myCv}
               className="px-1 inline-block py-1 w-full sm:w-fit rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 hover:bg-slate-800 text-white mt-3"
             >
-              <button
-                onClick={() => {
-                  window.location.href = heroData.myCv;
-                }}
-                className="block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2"
-              >
+              <span className="block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2">
                 Download CV
-              </button>
+              </span>
             </Link>
           </div>
         </motion.div>
@@ -82,16 +77,7 @@ const HeroSection: React.FC<HeroData> = ({ heroData }) => {
             <img
               src={heroData.image}
               alt="hero image"
-              className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-full"
-              style={{
-                width: "400px",
-                height: "400px",
-                objectFit: "cover",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
+              className="absolute inset-0 w-full h-full object-cover rounded-full"
             />
           </div>
         </motion.div>
