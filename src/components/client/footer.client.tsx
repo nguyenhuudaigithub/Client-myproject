@@ -5,10 +5,10 @@ interface FooterSectionProps {
 
 const Footer: React.FC<FooterSectionProps> = ({ logo, text }) => {
   return (
-    <footer className="footer border z-10 border-t-[#33353F] border-l-transparent border-r-transparent text-white">
+    <footer className="bg-black pb-10 footer border z-10 border-t-[#33353F] border-l-transparent border-r-transparent text-white">
       <div className="container p-12 flex justify-between">
         <span>{logo}</span>
-        <p className="text-slate-600">{text}</p>
+        <p className="text-slate-600 ml-5">{text}</p>
       </div>
     </footer>
   );
